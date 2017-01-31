@@ -172,12 +172,16 @@ public class Route {
                 for(ArrayList<String> route: routeList)
                 {
 
-                    if(!route.contains(current.getConnectedPointList().get(i)) && route.get(route.size()-1).equalsIgnoreCase(current.getId()) && !isReverse(pointList, current.getId(), route.get(route.size()-2), current.getConnectedPointList().get(i)))
+                    if(!route.contains(current.getConnectedPointList().get(i)) && route.get(route.size()-1).equalsIgnoreCase(current.getId()))
                     {
-                        tempCPList.add(current.getConnectedPointList().get(i));
-                        count++;
-                        //debug print
-                        System.out.println("added tempCP");
+                        if(!isReverse(pointList, current.getId(), route.get(route.size() > 1 ? route.size()-2 : 0), current.getConnectedPointList().get(i)))
+                        {
+                            tempCPList.add(current.getConnectedPointList().get(i));
+                            count++;
+                            //debug print
+                            System.out.println("added tempCP");
+                        }
+
 
                     }
                 }
@@ -446,10 +450,12 @@ public class Route {
             {
                 shortestRTA = rtaList.get(i).getShortestDistance();
                 shortIndex = i;
+                nearestEntry = rtaList.get(i).getDestPoint();
             }else if(rtaList.get(i).getShortestDistance() < shortestRTA)
             {
                 shortestRTA = rtaList.get(i).getShortestDistance();
                 shortIndex = i;
+                nearestEntry = rtaList.get(i).getDestPoint();
             }
         }
         ArrayList<Route> rfaList = new ArrayList<Route>();
@@ -467,21 +473,23 @@ public class Route {
             {
                 shortestRFA = rfaList.get(i).getShortestDistance();
                 outIndex = i;
+                nearestExit = rfaList.get(i).getStartPoint();
             }else if(rfaList.get(i).getShortestDistance() < shortestRFA)
             {
                 shortestRFA = rfaList.get(i).getShortestDistance();
                 outIndex = i;
+                nearestExit = rfaList.get(i).getStartPoint();
             }
         }
         ArrayList<String> tempRoute = new ArrayList<String>();
-        ArrayList<Route> routeList = new ArrayList<Route>();
-        routeList.add(new Route(nearestEntry, nearestExit, "Access"));
+
+        Route tRoute = new Route(nearestEntry, nearestExit, "Access");
         for(String a: rtaList.get(shortIndex).getShortestList())
         {
             tempRoute.add(a);
         }
-        routeList.get(0).setAccessRoute(accessPointList);
-        for(String a: routeList.get(0).getAccessList())
+        tRoute.setAccessRoute(accessPointList);
+        for(String a: tRoute.getAccessList())
         {
             tempRoute.add(a);
         }
@@ -652,10 +660,12 @@ public class Route {
             if(p.getId().equalsIgnoreCase(id1))
             {
                 point1 = p;
-            }else if(p.getId().equalsIgnoreCase(id2))
+            }
+            if(p.getId().equalsIgnoreCase(id2))
             {
                 point2 = p;
-            }else if(p.getId().equalsIgnoreCase(id3))
+            }
+            if(p.getId().equalsIgnoreCase(id3))
             {
                 point3 = p;
             }
