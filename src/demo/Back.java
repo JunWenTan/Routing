@@ -21,7 +21,7 @@ public class Back {
     {
         ArrayList<Route> routeList = new ArrayList<Route>();
         routeList.add(new Route("1", "7", "Best"));
-        routeList.add(new Route("1", "12", "Access"));
+        routeList.add(new Route("10", "3", "Access"));
 
         //initialize dummy waypoints on map
         ArrayList<Point> pointList = new ArrayList<Point>();

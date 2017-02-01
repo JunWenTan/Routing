@@ -10,9 +10,9 @@ import java.util.Collections;
 public class Route {
     private String startPoint;
     private String destPoint;
-    private double totalEffort;
-    private double totalDistance;
-    private double shortestDistance;
+    private int totalEffort;
+    private int totalDistance;
+    private int shortestDistance;
     private String type;
     private ArrayList<String> pointList;
     private ArrayList<String> shortestList;
@@ -25,6 +25,7 @@ public class Route {
         this.setType(type);
         this.setTotalEffort(0);
         this.setTotalDistance(0);
+        this.setShortestDistance(0);
         this.pointList = new ArrayList<String>();
         this.shortestList = new ArrayList<String>();
         this.accessList = new ArrayList<String>();
@@ -62,19 +63,19 @@ public class Route {
         this.destPoint = destPoint;
     }
 
-    public double getTotalEffort() {
+    public int getTotalEffort() {
         return totalEffort;
     }
 
-    public void setTotalEffort(double totalEffort) {
+    public void setTotalEffort(int totalEffort) {
         this.totalEffort = totalEffort;
     }
 
-    public double getTotalDistance() {
+    public int getTotalDistance() {
         return totalDistance;
     }
 
-    public void setTotalDistance(double totalDistance) {
+    public void setTotalDistance(int totalDistance) {
         this.totalDistance = totalDistance;
     }
 
@@ -86,11 +87,11 @@ public class Route {
         this.type = type;
     }
 
-    public double getShortestDistance() {
+    public int getShortestDistance() {
         return shortestDistance;
     }
 
-    public void setShortestDistance(double shortestDistance) {
+    public void setShortestDistance(int shortestDistance) {
         this.shortestDistance = shortestDistance;
     }
 
@@ -328,10 +329,10 @@ public class Route {
         //compute distance and effort
     }
 
-    public static double[] computeDistanceAndEffort(String id1, String id2, ArrayList<Point> pointList)
+    public static int[] computeDistanceAndEffort(String id1, String id2, ArrayList<Point> pointList)
     {
-        double[] doubles = new double[2];
-        double diffX = 0, diffY = 0;
+        int[] ints = new int[2];
+        int diffX = 0, diffY = 0;
         breakloop:
         for(Point a: pointList)
         {
@@ -341,8 +342,8 @@ public class Route {
                 {
                     if(b.getId().equalsIgnoreCase(id2))
                     {
-                        diffX = Math.abs(a.getOffX() - b.getOffX());
-                        diffY = Math.abs(a.getOffY() - b.getOffY());
+                        diffX = (int)Math.abs(a.getOffX() - b.getOffX());
+                        diffY = (int)Math.abs(a.getOffY() - b.getOffY());
                         //debug print
                         System.out.print(diffX + " : " + diffY + " : ");
                         break breakloop;
@@ -350,29 +351,29 @@ public class Route {
                 }
             }
         }
-        doubles[0] = Math.sqrt((diffX*diffX)+(diffY*diffY));
-        double effort = 1;
+        ints[0] = (int)Math.sqrt((diffX*diffX)+(diffY*diffY));
+        int effort = 1;
         if((id1.equals("5") && id2.equals("7") || (id1.equals("7") && id2.equals("6"))))
         {
             effort = 20;
         }
-        doubles[1] = doubles[0] * effort;
-        return doubles;
+        ints[1] = ints[0] * effort;
+        return ints;
     }
 
     public ArrayList<String> getShortestRoute(ArrayList<ArrayList<String>> routeList, ArrayList<Point> pointList)
     {
         ArrayList<String> shortestRoute = null;
-        double totalDistance = 0;
-        double shortestDistance = 0;
+        int totalDistance = 0;
+        int shortestDistance = 0;
         int shortestRouteIndex = 0;
         for(int j = 0; j < routeList.size(); j++)
         {
             for(int i = 0; i < routeList.get(j).size() - 1 ; i++)
             {
-                double doubles[] = Route.computeDistanceAndEffort(routeList.get(j).get(i), routeList.get(j).get(i+1), pointList);
-                System.out.println(doubles[0]);
-                totalDistance += doubles[0];
+                int ints[] = Route.computeDistanceAndEffort(routeList.get(j).get(i), routeList.get(j).get(i+1), pointList);
+                System.out.println(ints[0]);
+                totalDistance += ints[0];
             }
             //debug print
             System.out.println("Distance: " + totalDistance);
@@ -397,16 +398,16 @@ public class Route {
     public ArrayList<String> getBestRoute(ArrayList<ArrayList<String>> routeList, ArrayList<Point> pointList)
     {
         ArrayList<String> bestRoute = null;
-        double totalEffort = 0;
-        double lowestEffort = 0;
+        int totalEffort = 0;
+        int lowestEffort = 0;
         int bestRouteIndex = 0;
         for(int j = 0; j < routeList.size(); j++)
         {
             for(int i = 0; i < routeList.get(j).size() - 1 ; i++)
             {
-                double doubles[] = Route.computeDistanceAndEffort(routeList.get(j).get(i), routeList.get(j).get(i+1), pointList);
-                System.out.println(doubles[0]);
-                totalEffort += doubles[1];
+                int ints[] = Route.computeDistanceAndEffort(routeList.get(j).get(i), routeList.get(j).get(i+1), pointList);
+                System.out.println(ints[0]);
+                totalEffort += ints[1];
             }
             //debug print
             System.out.println("Effort: " + totalEffort);
@@ -432,7 +433,7 @@ public class Route {
     {
         ArrayList<String> accessRoute = null;
         String nearestEntry = "";
-        double leastDistance = 0;
+        int leastDistance = 0;
         String nearestExit = "";
 
         ArrayList<Route> rtaList = new ArrayList<Route>();
@@ -441,7 +442,7 @@ public class Route {
             rtaList.add(new Route(this.getStartPoint(), p.getId(), "Short"));
 
         }
-        double shortestRTA = 0;
+        int shortestRTA = 0;
         int shortIndex = -1;
         for(int i = 0; i < rtaList.size(); i++)
         {
@@ -464,7 +465,7 @@ public class Route {
         {
             rfaList.add(new Route(p.getId(), this.getDestPoint(), "Short"));
         }
-        double shortestRFA = 0;
+        int shortestRFA = 0;
         int outIndex = -1;
         for(int i = 0; i < rfaList.size(); i++)
         {
@@ -488,11 +489,17 @@ public class Route {
         {
             tempRoute.add(a);
         }
-        tRoute.setAccessRoute(accessPointList);
-        for(String a: tRoute.getAccessList())
+        tRoute.setShortestRoute(accessPointList);
+        ArrayList<String> debugList = tRoute.getShortestList();
+        for(String a: tRoute.getShortestList())
         {
-            tempRoute.add(a);
+            if(!tempRoute.contains(a))
+            {
+                tempRoute.add(a);
+            }
         }
+
+
 
         for(String a:rfaList.get(outIndex).getShortestList())
         {
